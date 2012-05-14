@@ -4,6 +4,8 @@
 #Todo: saveTodo
 
 #The function that starts up the program
+import pickle
+
 def newTodoList():
     
     #The initial menu
@@ -33,7 +35,8 @@ def newTodoList():
     elif response == "b":
         print "Please enter in your list's name"
         listName = raw_input(">")
-        viewTodoList(listName)
+        todoList = loadTodoList(listName)
+        viewTodoList(todoList)
 
 def addTodo(todoList):
     #Todo item
@@ -58,24 +61,44 @@ def addTodo(todoList):
         if response == "a":
             viewTodoList(todoList)
         elif response == "b":
-            saveTodoList():
-            exit():
+            print saveTodoList(todoList)
+            exit()
     else:
         print "whatever"
     return
 
 def viewTodoList(TodoList):
-    return
+    print "Your Todo List " + TodoList.listName + " has the following Todos:"
+    for x in TodoList.todolist:
+        print x.priority + ":" + x.todo
+    print "What would you like to do with this list?"
+    print "a) Add a todo"
+    print "b) Remove a todo"
+    print "c) Modify a todo"
+    response = raw_input(">")
+    if response = "a":
+        addTodo(TodoList)
+    elif:
+        
+    return 
 def removeTodo(index):
     return
 def modifyTodo(index):
     return
 def modifyTodoList(listName):
     return
-def saveTodoList(TodoList):
-    return
+
+def saveTodoList(TodoList):    
+    #File to save the TodoList to will be given the name of the list plus the .ser extension
+    file = open(TodoList.listName + ".ser", "w")
+    pickle.dump(TodoList, file)
+    return "Your list " + TodoList.listName + " was successfully saved!"
+
 def loadTodoList(listName):
-    return
+    #Load the TodoList based on it's listName
+    todoList = pickle.load(open(listName + ".ser", "r"))
+    print "You've loaded the TodoList named " + listName
+    return todoList
 
 class TodoList:
     todolist = "empty"
