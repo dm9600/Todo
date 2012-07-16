@@ -1,0 +1,3 @@
+import TodoList
+
+TodoList.newTodoList()
