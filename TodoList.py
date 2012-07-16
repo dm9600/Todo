@@ -1,9 +1,9 @@
 #TodoList version 1.0
-#by David Mai
+#by dm9600
 #A simple todo list program
-#Todo: saveTodo
+#1) Implement all the remaining functions (modifyTodo)
+#2) Implement I/O functions
 
-#The function that starts up the program
 import pickle
 
 def newTodoList():
@@ -29,14 +29,14 @@ def newTodoList():
             addTodo(newList)
         #Exit
         elif response == "b":
-            print "Goodbye User"
+            exitProgram()
 
     #If the user decides to see an existing list
     elif response == "b":
         print "Please enter in your list's name"
         listName = raw_input(">")
-        todoList = loadTodoList(listName)
-        viewTodoList(todoList)
+        currentTodoList = loadTodoList(listName)
+        viewTodoList(currentTodoList)
 
 def addTodo(todoList):
     #Todo item
@@ -61,64 +61,105 @@ def addTodo(todoList):
         if response == "a":
             viewTodoList(todoList)
         elif response == "b":
-            print saveTodoList(todoList)
+            saveTodoList(todoList)
             exit()
     else:
         print "whatever"
     return
 
 def viewTodoList(TodoList):
-    print "Your Todo List " + TodoList.listName + " has the following Todos:"
-    for x in TodoList.todolist:
-        print x.priority + ":" + x.todo
-    print "What would you like to do with this list?"
+    print "Here are the current todos on the list: "
+    for todo in TodoList.todolist:
+        print todo.getPriority() + ": " + todo.getTodo()
+    print "What would you like to do?"
     print "a) Add a todo"
     print "b) Remove a todo"
-    print "c) Modify a todo"
+    print "c) Sort list descending"
+    print "d) Save list"
+    print "e) "
+    print "e) Exit"
+    
     response = raw_input(">")
-    if response = "a":
+    if response == "a":
         addTodo(TodoList)
-    elif:
-        
-    return 
-def removeTodo(index):
+    elif response == "b":
+        print "Please enter the index of the todo to remove"
+        index = int(raw_input(">"))
+        removeTodo(TodoList, index)
+    elif response == "c":
+        TodoList.sortTodos()
+        print "TodoList has been sorted"
+        viewTodoList(TodoList)
+    elif response == "d":
+        saveTodoList(TodoList)
+    elif response == "e":
+        exitProgram()
+
     return
-def modifyTodo(index):
+
+#Removes a todo based on a TodoList and the index of the todo on the list
+def removeTodo(TodoList, index):
+    #Removes the todo from the list, as well as set it to the variable removedTodo
+    removedTodo = TodoList.todolist.pop(0)
+    print "You've removed the following todo from your todolist: " + removedTodo.getTodo()
+    print "with priority: " + removedTodo.getPriority()
+    #Return to view flow when finished
+    viewTodoList(TodoList)
+    return
+
+def modifyTodo(TodoList, index):
+    print "You've selected the todo " + TodoList.todolist[int(index)].todo
+    print "What would you like to do with this todo?"
+    return
+def loadFromFile():
+    return
+def outputAsFile():
     return
 def modifyTodoList(listName):
     return
+def exitProgram():
+    print "Goodbye User"
 
 def saveTodoList(TodoList):    
-    #File to save the TodoList to will be given the name of the list plus the .ser extension
-    file = open(TodoList.listName + ".ser", "w")
-    pickle.dump(TodoList, file)
-    return "Your list " + TodoList.listName + " was successfully saved!"
+    #Creates the filename for the TodoList
+    filename = TodoList.listName + ".ser"
+
+    #Defines the file that'll be written. "w" indicates it's writeable
+    yourfile = file(filename, "w")
+    
+    #Serialize the file
+    pickle.dump(TodoList, yourfile)
+    print "You've saved your list to " + filename
+    return
 
 def loadTodoList(listName):
-    #Load the TodoList based on it's listName
-    todoList = pickle.load(open(listName + ".ser", "r"))
-    print "You've loaded the TodoList named " + listName
-    return todoList
+    #Defines the file to look for
+    yourfile = file(listName + ".ser", "r")
+    
+    #Loads the targetted file
+    currentTodoList = pickle.load(yourfile)  
+    print "You've loaded the TodoList " + listName
+    return currentTodoList
 
 class TodoList:
     todolist = "empty"
     listName = "no name"
-
+    
+    #Constructor
     def __init__(self, todolist, listName):
         self.todolist = todolist
         self.listName = listName
 
+    #Method for adding todos
     def addTodo(self, todo):
         if self.todolist == "empty":
             self.todolist = [todo]
-        elif isinstance(self.todolist, list) == true:            
+        elif isinstance(self.todolist, list):            
             self.todolist.append(todo)
-
-    def todoComparator(todo1, todo2):
-        return todo1.getPriority() - todo2.getPriority
-
+    
+    #Sorting the list by priority
     def sortTodos(self):
-        self.todolist = self.todolist.sort(todoComparator)
+        self.todolist = sorted(self.todolist, key=lambda todo: todo.priority)
 
 class Todo:
     priority = 0

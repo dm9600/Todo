@@ -1,3 +1,0 @@
-import TodoList
-
-TodoList.newTodoList()
