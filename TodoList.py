@@ -1,17 +1,18 @@
 #TodoList version 1.0
 #by dm9600
 #A simple todo list program
-#1) Implement all the remaining functions (modifyTodo)
-#2) Implement I/O functions
+#Implement I/O functions (loadFromFile)
 
 import pickle
 
 def newTodoList():
     
     #The initial menu
-    print "Hello User, would you like to create a new Todo List or modify an existing one?"
+    print "Hello User, would you like to create a new Todo" \
+        "List or modify an existing one?"
     print "a) Create new List"
     print "b) View existing list"
+    print "c) Load list from file"
     response = raw_input(">")
 
     #If the user decides to create a new list
@@ -19,17 +20,8 @@ def newTodoList():
         print "Please give your new list a name"
         listName = raw_input(">")
         newList = TodoList("empty", listName)
-        print "You have created a new list with name " + listName + ". Would you like to:"
-        print "a) Add a todo"
-        print "b) exit"
-        response = raw_input(">")
-        
-        #If the user wants to add an item to their newly created list
-        if response == "a":
-            addTodo(newList)
-        #Exit
-        elif response == "b":
-            exitProgram()
+        print "You have created a new list with name " + listName 
+        viewTodoList(newList)
 
     #If the user decides to see an existing list
     elif response == "b":
@@ -52,7 +44,9 @@ def addTodo(todoList):
     if int(newPriority) > 0 and int(newPriority) <= 10:
         newTodo = Todo(newPriority, newTodoItem)
         todoList.addTodo(newTodo)        
-        print "You've created a new Todo: " + newTodoItem + " with a priority of " + newPriority + ". What would you like to do now?"
+        print "You've created a new Todo: " \
+        + newTodoItem + " with a priority of " \
+        + newPriority + ". What would you like to do now?"
         print "a) View my list"
         print "b) Save and quit"
         response = raw_input(">")
@@ -64,20 +58,25 @@ def addTodo(todoList):
             saveTodoList(todoList)
             exit()
     else:
-        print "whatever"
+        print "Priority needs to be between 0 and 10"
+        addTodo(todoList)
     return
 
+#View a todolist, and give lots of options
 def viewTodoList(TodoList):
-    print "Here are the current todos on the list: "
-    for todo in TodoList.todolist:
-        print todo.getPriority() + ": " + todo.getTodo()
+    if not isinstance(TodoList.todolist, basestring) \
+            and len(TodoList.todolist) > 0:
+        print "Here are the current todos on the list: "
+        for todo in TodoList.todolist:
+            print todo.getPriority() + ": " + todo.getTodo()
+
     print "What would you like to do?"
     print "a) Add a todo"
     print "b) Remove a todo"
     print "c) Sort list descending"
     print "d) Save list"
-    print "e) "
-    print "e) Exit"
+    print "e) Modify Todo"
+    print "f) Exit"
     
     response = raw_input(">")
     if response == "a":
@@ -93,30 +92,73 @@ def viewTodoList(TodoList):
     elif response == "d":
         saveTodoList(TodoList)
     elif response == "e":
+        print "Please enter in the index of the todo you'd like to modify"
+        response = raw_input(">")
+        modifyTodo(TodoList, response)
+    elif response == "f":
         exitProgram()
 
     return
 
 #Removes a todo based on a TodoList and the index of the todo on the list
 def removeTodo(TodoList, index):
-    #Removes the todo from the list, as well as set it to the variable removedTodo
+    #Removes the todo from the list and returns removedTodo
     removedTodo = TodoList.todolist.pop(0)
-    print "You've removed the following todo from your todolist: " + removedTodo.getTodo()
+    print "You've removed the following todo from your todolist: " \
+        + removedTodo.getTodo()
     print "with priority: " + removedTodo.getPriority()
     #Return to view flow when finished
     viewTodoList(TodoList)
     return
 
+#Modifies the todo at the specified index
 def modifyTodo(TodoList, index):
-    print "You've selected the todo " + TodoList.todolist[int(index)].todo
+    #Raw input is automatically a string, so convert it to int
+    currentTodo = TodoList.todolist[int(index)]
+    print "You've selected the todo " + currentTodo.todo
     print "What would you like to do with this todo?"
+    print "a) Change it's content"
+    print "b) Change it's priority"
+    print "c) Delete it"
+    print "d) Cancel"
+    response = raw_input(">")
+    if response == "a":
+        changeTodoContent(currentTodo)
+        viewTodoList(TodoList)
+    elif response == "b":
+        changeTodoPriority(currentTodo)
+        viewTodoList(TodoList)
+    elif response == "c":
+        removeTodo(TodoList, index)
+    elif response == "d":
+        viewTodoList(TodoList)
     return
-def loadFromFile():
+
+#Change the "todo" attribute of the Todo class
+def changeTodoContent(Todo):
+    print "What would you like to change the content to?"
+    response = raw_input(">")
+    Todo.setTodo(response)
+    print "You've changed this todo's content to " + response    
     return
+
+#Change the "priority" attribute of the Todo class
+def changeTodoPriority(Todo):
+    print "What would you like to change the priority to?"
+    response = raw_input(">")
+    Todo.setPriority(response)
+    return
+
+#Load a todolist from a file. File should be formatted like this:
+#"4: Something to do, 3: Something else to do," etc
+def loadFromFile(filename):
+    loadFile = open(filename, w)
+    print loadFile
+    return
+
 def outputAsFile():
     return
-def modifyTodoList(listName):
-    return
+
 def exitProgram():
     print "Goodbye User"
 
@@ -130,6 +172,8 @@ def saveTodoList(TodoList):
     #Serialize the file
     pickle.dump(TodoList, yourfile)
     print "You've saved your list to " + filename
+    
+    viewTodoList(TodoList)
     return
 
 def loadTodoList(listName):
