@@ -1,12 +1,12 @@
 #TodoList version 1.0
 #by dm9600
 #A simple todo list program
-#Implement I/O functions (loadFromFile)
+#Stop loadFromFile from stripping whitespaces from todos
 
 import pickle
 
 def newTodoList():
-    
+    loadFromFile("loadthis.txt")
     #The initial menu
     print "Hello User, would you like to create a new Todo" \
         "List or modify an existing one?"
@@ -152,9 +152,21 @@ def changeTodoPriority(Todo):
 #Load a todolist from a file. File should be formatted like this:
 #"4: Something to do, 3: Something else to do," etc
 def loadFromFile(filename):
-    loadFile = open(filename, w)
-    print loadFile
-    return
+    #Removes all whitespaces from the file and splits by ","
+    loadFile = "".join(open(filename, "r").read().split())
+    trimmedFile = loadFile.split(",")
+    
+    #Populate a new todolist with the file contents
+    newTodoList = []
+    for rawTodo in trimmedFile:
+        rawTodoSplit = rawTodo.split(":")
+        newTodoList.append(Todo(rawTodoSplit[0], rawTodoSplit[1]))
+    
+    #Create new list with name filename minus .txt with newTodoList
+    returnValue = TodoList(newTodoList, filename.strip(".txt"))
+    for x in returnValue.todolist:
+        print x.todo
+    return returnValue
 
 def outputAsFile():
     return
