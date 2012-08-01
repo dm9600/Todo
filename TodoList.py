@@ -1,12 +1,10 @@
 #TodoList version 1.0
 #by dm9600
 #A simple todo list program
-#Stop loadFromFile from stripping whitespaces from todos
 
 import pickle
 
 def newTodoList():
-    loadFromFile("loadthis.txt")
     #The initial menu
     print "Hello User, would you like to create a new Todo" \
         "List or modify an existing one?"
@@ -29,6 +27,12 @@ def newTodoList():
         listName = raw_input(">")
         currentTodoList = loadTodoList(listName)
         viewTodoList(currentTodoList)
+
+    #If the user wants to laod from file
+    elif response == "c":
+        print "Please enter in the name of the file"
+        filename = raw_input(">")
+        viewTodoList(loadFromFile(filename))
 
 def addTodo(todoList):
     #Todo item
@@ -77,6 +81,7 @@ def viewTodoList(TodoList):
     print "d) Save list"
     print "e) Modify Todo"
     print "f) Exit"
+    print "g) Save to file"
     
     response = raw_input(">")
     if response == "a":
@@ -97,7 +102,9 @@ def viewTodoList(TodoList):
         modifyTodo(TodoList, response)
     elif response == "f":
         exitProgram()
-
+    elif response == "g":
+        outputAsFile(TodoList, TodoList.listName)
+        viewTodoList(TodoList)
     return
 
 #Removes a todo based on a TodoList and the index of the todo on the list
@@ -152,9 +159,23 @@ def changeTodoPriority(Todo):
 #Load a todolist from a file. File should be formatted like this:
 #"4: Something to do, 3: Something else to do," etc
 def loadFromFile(filename):
-    #Removes all whitespaces from the file and splits by ","
-    loadFile = "".join(open(filename, "r").read().split())
-    trimmedFile = loadFile.split(",")
+    #Sets the default return value
+    returnValue = TodoList([], "nothing")
+
+    #Reads the file and splits it by commas
+    todoStringList = open(filename, "r").read().split(",")
+
+    #Populates the todolist with todos
+    todolist = []
+    for string in todoStringList:
+        todoString = string.strip().split(":")
+        todolist.append(Todo(todoString[0], todoString[1]))
+        
+    #The new list will be named with the filename minus the extension
+    filenameNoExt = filename.split(".")
+    returnValue = TodoList(todolist, filenameNoExt)    
+
+    return returnValue
     
     #Populate a new todolist with the file contents
     newTodoList = []
@@ -164,12 +185,19 @@ def loadFromFile(filename):
     
     #Create new list with name filename minus .txt with newTodoList
     returnValue = TodoList(newTodoList, filename.strip(".txt"))
-    for x in returnValue.todolist:
-        print x.todo
     return returnValue
 
-def outputAsFile():
-    return
+def outputAsFile(TodoList, filename):
+    returnValue = open(filename + ".txt", "w")
+    outString = ""
+    for index, todo in enumerate(TodoList.todolist):
+        outString += todo.priority + ":" + todo.todo
+        if not index == len(TodoList.todolist) - 1:
+            outString += ","
+    returnValue.write(outString)
+    print "You've written your todo to the file " \
+        + filename + ".txt"
+    return 
 
 def exitProgram():
     print "Goodbye User"
