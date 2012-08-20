@@ -1,0 +1,72 @@
+html
+{
+    background-color: ghostwhite;
+    background-repeat: repeat;
+} 
+.banner 
+{
+    background:white;
+    color:darkSlateGray;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+h2.color
+{
+    padding-left: 40px;
+    line-height: 40px;
+    font-size: 30px;
+}
+
+.rectangle 
+{
+    width:800px;
+    vertical-align:center;
+    padding: 20 0 20 0;
+    border-radius:10px;
+    background-color: #87c442;
+    color: whitesmoke;
+}
+
+span.priority
+{
+    left: 480px;
+    position: relative;
+    border-radius: 40px;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    font-color : #fff;
+    border-color: #FFCC66 !important;
+    opacity: .9 !important;
+    padding: 10px 20px;
+    text-align: center;
+    width: 250px;
+    bottom:40px;
+    float: left;
+}
+
+
+
+.vertical-divider
+{
+    height:30px;
+}
+
+*
+{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 100%;
+    list-style: none;
+}
+
+h1
+{
+    font-size: 40px;
+    text-align: center;
+}
