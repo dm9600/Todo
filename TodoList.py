@@ -4,6 +4,24 @@
 
 import pickle
 
+def newTodoList2(list_name):
+    navValue = ""
+    newList = TodoList("empty", list_name)
+    return newList
+
+def saveTodoList2(TodoList):    
+    #Creates the filename for the TodoList
+    filename = TodoList.listName + ".ser"
+
+    #Defines the file that'll be written. "w" indicates it's writeable
+    yourfile = file(filename, "w")
+    
+    #Serialize the file
+    pickle.dump(TodoList, yourfile)
+    print "You've saved your list to " + filename
+    
+    return
+
 def newTodoList():
     #The initial menu
     print "Hello User, would you like to create a new Todo" \
