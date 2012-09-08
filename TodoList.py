@@ -20,7 +20,7 @@ def saveTodoList2(TodoList):
     pickle.dump(TodoList, yourfile)
     print "You've saved your list to " + filename
     
-    return
+    return 
 
 def newTodoList():
     #The initial menu

@@ -19,5 +19,12 @@
       </span>
     </div>
     %end
+    <form action="/add_todo" method="post">
+      <div>
+	Todo: <input type="text" name="todo" value="Randomtxt"/>
+	Priority: <input type="text" name="priority" value="Randomtxt"/>
+	<input type="submit" value="Add Todo"/>
+      </div>
+    </form>
   </body>
 </html>
