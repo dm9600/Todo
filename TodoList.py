@@ -6,7 +6,7 @@ import pickle
 
 def newTodoList2(list_name):
     navValue = ""
-    newList = TodoList("empty", list_name)
+    newList = TodoList(list(), list_name)
     return newList
 
 def saveTodoList2(TodoList):    
@@ -20,7 +20,17 @@ def saveTodoList2(TodoList):
     pickle.dump(TodoList, yourfile)
     print "You've saved your list to " + filename
     
-    return 
+    return
+
+#Removes a todo based on a TodoList and the index of the todo on the list
+def removeTodo2(TodoList, index):
+    #Removes the todo from the list and returns removedTodo
+    removedTodo = TodoList.todolist.pop(index)
+    print "You've removed the following todo from your todolist: " \
+        + removedTodo.getTodo()
+    print "with priority: " + removedTodo.getPriority()
+    #Return to view flow when finished
+    return TodoList
 
 def newTodoList():
     #The initial menu

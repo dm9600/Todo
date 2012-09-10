@@ -9,16 +9,21 @@
     <h1>
       {{list_name}}
     </h1>
-    %for x in currentTodoList:
-    <div>
-      <span>
-	{{x.todo}}
-      </span>
-      <span>
-	{{x.priority}}
-      </span>
-    </div>
-    %end
+    <form action="/remove_todo" method="post">
+      %for x in currentTodoList:
+      <div>
+	<span>
+	  <input type="submit" name="todo_index" value = {{currentTodoList.index(x) + 1}} />
+	</span>
+	<span>
+	  {{x.todo}}
+	</span>
+	<span>
+	  {{x.priority}}
+	</span>
+      </div>
+      %end
+    </form>
     <form action="/add_todo" method="post">
       <div>
 	Todo: <input type="text" name="todo" value="Randomtxt"/>
