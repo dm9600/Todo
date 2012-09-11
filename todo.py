@@ -1,6 +1,6 @@
 #A simple todo webapp
 #by David Mai
-#Current task: implement index numbers on view
+#Current task: get i/o to work
 
 import bottle
 from bottle import *
@@ -105,6 +105,13 @@ def remove_todo():
 
     return return_value
 
+@post('/load_from_file')
+def load_from_file():
+    list_file = request.forms.get("file")
+    a = request.files.data
+    print a
+    return request.files.filename
+    
 @route('/hello')
 def hello():
     return 'Hello Worl'

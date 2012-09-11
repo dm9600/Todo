@@ -18,5 +18,11 @@
 	<input type="submit" value="Submit"/>
       </div>
     </form>
+    <form action="/load_from_file" method="post" enctype="multipart/form-data">
+      <div>
+	Load File: <input type="file" name="file" />
+	<input type="submit" value="Submit"/>
+      </div>
+    </form>
   </body>
 </html>
