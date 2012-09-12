@@ -32,6 +32,38 @@ def removeTodo2(TodoList, index):
     #Return to view flow when finished
     return TodoList
 
+#Load a todolist from a file. File should be formatted like this:
+#"4: Something to do, 3: Something else to do," etc
+def loadFromFile2(file, filename):
+    #Sets the default return value
+    returnValue = TodoList([], "nothing")
+
+    #Reads the file and splits it by commas
+    todoStringList = file.readlines()
+
+    #Populates the todolist with todos
+    todolist = []
+    for string in todoStringList:
+        todoString = string.strip().split(":")
+        todolist.append(Todo(todoString[0], todoString[1]))
+        
+    #The new list will be named with the filename minus the extension
+    filenameNoExt = filename.split(".")
+    returnValue = TodoList(todolist, filenameNoExt)    
+
+    return returnValue
+    
+    #Populate a new todolist with the file contents
+    newTodoList = []
+    for rawTodo in trimmedFile:
+        rawTodoSplit = rawTodo.split(":")
+        newTodoList.append(Todo(rawTodoSplit[0], rawTodoSplit[1]))
+    
+    #Create new list with name filename minus .txt with newTodoList
+    returnValue = TodoList(newTodoList, filename.strip(".txt"))
+    return returnValue
+
+
 def newTodoList():
     #The initial menu
     print "Hello User, would you like to create a new Todo" \

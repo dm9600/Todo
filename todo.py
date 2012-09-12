@@ -1,6 +1,6 @@
 #A simple todo webapp
 #by David Mai
-#Current task: get i/o to work
+#Current task: finish load_from_file
 
 import bottle
 from bottle import *
@@ -107,10 +107,13 @@ def remove_todo():
 
 @post('/load_from_file')
 def load_from_file():
-    list_file = request.forms.get("file")
-    a = request.files.data
-    print a
-    return request.files.filename
+    list_file = request.files["file"].file
+    filename = request.files["file"].filename
+
+    TodoList_from_file = loadFromFile2(list_file, filename)
+    for todo in list_file.readlines():
+        print todo
+    return 
     
 @route('/hello')
 def hello():
