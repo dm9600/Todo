@@ -49,7 +49,7 @@ def loadFromFile2(file, filename):
         
     #The new list will be named with the filename minus the extension
     filenameNoExt = filename.split(".")
-    returnValue = TodoList(todolist, filenameNoExt)    
+    returnValue = TodoList(todolist, filenameNoExt[0])    
 
     return returnValue
     
@@ -63,7 +63,18 @@ def loadFromFile2(file, filename):
     returnValue = TodoList(newTodoList, filename.strip(".txt"))
     return returnValue
 
-
+def outputAsFile2(TodoList, filename):
+    returnValue = open(filename + ".txt", "w")
+    outString = ""
+    for index, todo in enumerate(TodoList.todolist):
+        outString += todo.priority + ":" + todo.todo
+        if not index == len(TodoList.todolist) - 1:
+            outString += ","
+    returnValue.write(outString)
+    print "You've written your todo to the file " \
+        + filename + ".txt"
+    return returnValue.read()
+    
 def newTodoList():
     #The initial menu
     print "Hello User, would you like to create a new Todo" \

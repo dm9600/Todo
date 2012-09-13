@@ -1,6 +1,6 @@
 #A simple todo webapp
 #by David Mai
-#Current task: finish load_from_file
+#Current task: figure out how to prompt download with export to file
 
 import bottle
 from bottle import *
@@ -107,13 +107,26 @@ def remove_todo():
 
 @post('/load_from_file')
 def load_from_file():
+    #Get file and filename
     list_file = request.files["file"].file
     filename = request.files["file"].filename
 
-    TodoList_from_file = loadFromFile2(list_file, filename)
-    for todo in list_file.readlines():
-        print todo
-    return 
+    #Convert file into TodoList object
+    current_list = loadFromFile2(list_file, filename)
+    session = bottle.request.environ.get('beaker.session')
+    saveTodoList2(current_list)
+
+    #Set the current list
+    session["current_list"] = current_list.listName
+    return_value = template("view_existing_list.tpl", currentTodoList=current_list.todolist, list_name=current_list.listName)
+    return return_value
+
+@post('export_to_file')
+def export_to_file():
+    session = bottle.request.environ.get('beaker.session')
+    current_list = loadTodoList(session["current_list"])
+    return_value = outputAsFile2(current_list, session["current_list"])
+    return return_value
     
 @route('/hello')
 def hello():
