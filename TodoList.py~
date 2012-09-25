@@ -73,7 +73,6 @@ def outputAsFile2(TodoList, filename):
     returnValue.write(outString)
     print "You've written your todo to the file " \
         + filename + ".txt"
-    returnValue = open(filename + ".txt", "r")
     return returnValue.read()
     
 def newTodoList():

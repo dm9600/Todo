@@ -11,13 +11,4 @@ def does_file_exist(filename):
     else:
         returnValue = True
     return returnValue
-
-#Check if it's a number (for priority)
-def is_number(anything):
-    try:
-        float(anything)
-        return True
-    except ValueError:
-        return False
-    
     

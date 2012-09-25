@@ -1,13 +1,12 @@
 #A simple todo webapp
 #by David Mai
-#Current task: implement flash messages
+#Current task: figure out how to prompt download with export to file
 
 import bottle
 from bottle import *
 from TodoList import *
 from validators import *
 from beaker.middleware import SessionMiddleware
-from bottle_flash import *
 
 @get('/new_list')
 def new_list():
@@ -122,20 +121,11 @@ def load_from_file():
     return_value = template("view_existing_list.tpl", currentTodoList=current_list.todolist, list_name=current_list.listName)
     return return_value
 
-@get('/export_to_file')
+@post('export_to_file')
 def export_to_file():
-    
-    #Load list from session
     session = bottle.request.environ.get('beaker.session')
     current_list = loadTodoList(session["current_list"])
-
-    #Get the list as a file
     return_value = outputAsFile2(current_list, session["current_list"])
-
-    #Set the response type as a file attachment
-    response.content_type='text/plain'
-    response.headers['Content-Disposition']= 'attachment; filename=\"' + current_list.listName + '.txt\"'
-    
     return return_value
     
 @route('/hello')
