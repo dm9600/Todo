@@ -6,9 +6,14 @@
     <title>New List</title>
   </head>
   <body>
+    %for x in messages:
+        <div id="messages">
+	  {{x}}
+        </div>
+    %end
     <form action="/new_list" method="post">
       <div>
-	New List: <input type="text" name="list_name" value="Randomtxt" />
+	New List: <input type="text" name="list_name" value="Randomtxt"/>
 	<input type="submit" value="Submit" />
       </div>
     </form>

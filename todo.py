@@ -8,10 +8,17 @@ from TodoList import *
 from validators import *
 from beaker.middleware import SessionMiddleware
 from bottle_flash import *
+import pdb
 
 @get('/new_list')
 def new_list():
-    view = template('todo.tpl', name="boo")
+    session = bottle.request.environ.get('beaker.session')
+
+    #Initialize Messages
+    session["messages"]=[""]
+
+    #Create the template with the messages set
+    view = template('todo.tpl', name="boo", messages = session["messages"])
     return view
 
 @post('/new_list')
@@ -38,6 +45,10 @@ def new_list_post():
 
 @post('/view_existing_list')
 def view_existing_list():
+    session = bottle.request.environ.get('beaker.session')
+    if not "messages" in session:
+        session["messages"] = []
+    
     #Get the name of the requested list
     list_name = request.forms.get('existing_list')
 
@@ -45,10 +56,9 @@ def view_existing_list():
     if does_file_exist(list_name + ".ser"):
         #Load the list
         currentTodoList = loadTodoList(list_name).todolist
-        return_value = template("view_existing_list.tpl", currentTodoList=currentTodoList, list_name=list_name)
+        return_value = template("view_existing_list.tpl", currentTodoList=currentTodoList, list_name=list_name, messages=session["messages"])
         
         #Save the current list name in session
-        session = bottle.request.environ.get('beaker.session')
         if not "current_list" in session:
             session["current_list"] = list_name
             print list_name + " was saved in session"
@@ -61,29 +71,41 @@ def add_todo():
 
     #Get the session and set default current_list
     session = bottle.request.environ.get('beaker.session')
+    if not "messages" in session:
+        session["messages"] = []
+        
     current_list = TodoList([], "nothing")
 
     #Get todo and priority from request, and create todo object
     todo_to_add = request.forms.get("todo")
     priority_to_add = request.forms.get("priority")
-    todo = Todo(priority_to_add, todo_to_add)
 
-    #If current_list is defined...
-    if "current_list" in session:
+    #Validate the priority
+    #Checks if it's a number and it's between 1 and 5
+    if not is_valid_priority(priority_to_add) :
+        pdb.set_trace()
+        todo = Todo(priority_to_add, todo_to_add)
         
-        #Load the list name from session, and load list
-        list_name = session["current_list"]
-        current_list = loadTodoList(list_name)
+        #If current_list is defined...
+        if "current_list" in session:
+            
+            #Load the list name from session, and load list
+            list_name = session["current_list"]
+            current_list = loadTodoList(list_name)
 
-        #Add the todo object to the todolist, and save
-        current_list.addTodo(todo)
-        saveTodoList2(current_list)
-        return_value = template("view_existing_list.tpl", currentTodoList=current_list.todolist, list_name=list_name)
+            #Add the todo object to the todolist, and save
+            current_list.addTodo(todo)
+            saveTodoList2(current_list)
+            return_value = template("view_existing_list.tpl", currentTodoList=current_list.todolist, list_name=list_name)
+        else:
+            #Shouldn't ever get here
+            print session
+            return_value = "no list in session"
     else:
-        #Shouldn't ever get here
-        print session
-        return_value = "no list in session"
-    
+        session["messages"].append(is_valid_priority(priority))
+        return_value = template("todo.tpl", messages=session["messages"])
+        return
+        
     return return_value
 
 @post("/remove_todo")
@@ -149,6 +171,12 @@ session_opts = {
     'session.data_dir': './data',
     'session.auto': True
 }
+
+#Initialize messages
+def initialize_messages(session):
+    if not "messages" in session:
+        session["messages"] = [""]
+        
 app = SessionMiddleware(bottle.app(), session_opts)
 run(app=app, host='localhost', port=6080, debug=True, reloader=False)
 

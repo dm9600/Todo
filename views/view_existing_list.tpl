@@ -9,6 +9,7 @@
     <h1>
       {{list_name}}
     </h1>
+    
     <form action="/remove_todo" method="post">
       %for x in currentTodoList:
       <div>

@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>{{name}}</title>
+    sadfasdf
   </head>
   <body>
     <form action="/new_list" method="post">
